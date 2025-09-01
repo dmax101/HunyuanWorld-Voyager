@@ -351,4 +351,4 @@ GPU数量等于`--ulysses-degree`和`--ring-degree`的乘积。您可以自由�
 
 ## 致谢
 
-我们感谢[HunyuanVideo-I2V](https://github.com/Tencent-Hunyuan/HunyuanVideo-I2V)和[HunyuanWorld](https://github.com/Tencent-Hunyuan/HunyuanWorld-1.0)。我们也感谢[VGGT](https://github.com/facebookresearch/vggt)、[MoGE](https://github.com/microsoft/MoGe)、[Metric3D](https://github.com/YvanYin/Metric3D)的贡献者。
+我们感谢[HunyuanWorld](https://github.com/Tencent-Hunyuan/HunyuanWorld-1.0)、[Hunyuan3D-2](https://github.com/Tencent-Hunyuan/Hunyuan3D-2)和[HunyuanVideo-I2V](https://github.com/Tencent-Hunyuan/HunyuanVideo-I2V)。我们也感谢[VGGT](https://github.com/facebookresearch/vggt)、[MoGE](https://github.com/microsoft/MoGe)、[Metric3D](https://github.com/YvanYin/Metric3D)的贡献者。
