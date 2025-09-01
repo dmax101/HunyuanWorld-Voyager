@@ -1,17 +1,15 @@
-<!-- ## **HunyuanVideo** -->
-
-[中文阅读](./README_zh.md)
-
-<!-- <p align="center">
-  <img src="./assets/logo.png"  height=100>
-</p> -->
+[中文阅读](README_zh.md)
 
 # **HunyuanWorld-Voyager**
 
+<p align="center">
+  <img src="assets/teaser.png">
+</p>
+
 <div align="center">
-  <a href=""><img src="https://img.shields.io/static/v1?label=Project%20Page&message=Web&color=green"></a> &ensp;
-  <a href="https://arxiv.org/abs/2506.04225"><img src="https://img.shields.io/static/v1?label=Tech Report&message=Arxiv&color=red"></a> &ensp;
-  <a href=""><img src="https://img.shields.io/static/v1?label=HunyuanWorld-Voyager&message=HuggingFace&color=yellow"></a>
+  <a href="https://3d-models.hunyuan.tencent.com/world/" target="_blank"><img src="https://img.shields.io/static/v1?label=Project%20Page&message=Web&color=green" height=22px></a>
+  <a href="https://arxiv.org/abs/2506.04225" target="_blank"><img src="https://img.shields.io/static/v1?label=Tech%20Report&message=arxiv&color=red" height=22px></a>
+  <a href="https://huggingface.co/tencent/HunyuanWorld-Voyager" target="_blank"><img src="https://img.shields.io/static/v1?label=HunyuanWorld-Voyager&message=HuggingFace&color=yellow" height=22px></a>
 </div>
 
 -----
@@ -19,22 +17,22 @@
 We introduce HunyuanWorld-Voyager, a novel video diffusion framework that generates world-consistent 3D point-cloud sequences from a single image with user-defined camera path. Voyager can generate 3D-consistent scene videos for world exploration following custom camera trajectories. It can also jointly generate aligned depth and RGB video for effective and direct 3D reconstruction.
 
 
-
 ## 🔥🔥🔥 News!!
-* Sep 2, 2025: 👋 We release the inference code and model weights of HunyuanWorld-Voyager. [Download](./ckpts/README.md).
-
+* Sep 2, 2025: 👋 We release the inference code and model weights of HunyuanWorld-Voyager. [Download](ckpts/README.md).
 
 
 ## 🎥 Demo
 ### Demo Video
+
 <div align="center">
-  <video src="" width="80%" poster=""> </video>
+  <video src="https://github.com/user-attachments/assets/2eb844c9-30ba-4770-8066-189c123affee" width="80%" poster=""> </video>
 </div>
 
-### Camera-Controllable Video Generation 
+### Camera-Controllable Video Generation
+
 |  Input | Generated Video  |
 |:----------------:|:----------------:|
-|  <img src="assets/demo/camera/input1.png" width="80%">   |       <video src="https://github.com/user-attachments/assets/2b03ecd5-9a8f-455c-bf04-c668d3a61b04" width="100%"> </video> |
+|  <img src="assets/demo/camera/input1.png" width="80%">        |       <video src="https://github.com/user-attachments/assets/2b03ecd5-9a8f-455c-bf04-c668d3a61b04" width="100%"> </video>        |
 | <img src="assets/demo/camera/input2.png" width="80%">         |       <video src="https://github.com/user-attachments/assets/45844ac0-c65a-4e04-9f7d-4c72d47e0339" width="100%"> </video>        | 
 | <img src="assets/demo/camera/input3.png" width="80%">         |       <video src="https://github.com/user-attachments/assets/f7f48473-3bb5-4a30-bd22-af3ca95ee8dc" width="100%"> </video>        |
 
@@ -44,7 +42,7 @@ We introduce HunyuanWorld-Voyager, a novel video diffusion framework that genera
 
 | Generated Video | Reconstructed Point Cloud |
 |:---------------:|:--------------------------------:|
-| <video src="https://github.com/user-attachments/assets/72a41804-63fc-4596-963d-1497e68f7790" width="100%"> </video> | <video src="assets/demo/reconstruction/recording.mp4" width="100%"> </video> |
+| <video src="https://github.com/user-attachments/assets/72a41804-63fc-4596-963d-1497e68f7790" width="100%"> </video> | <video src="https://github.com/user-attachments/assets/67574e9c-9e21-4ed6-9503-e65d187086a2" width="100%"> </video> |
 
 - Image-to-3D Generation
 
@@ -60,7 +58,6 @@ We introduce HunyuanWorld-Voyager, a novel video diffusion framework that genera
 
 
 ## ☯️ **HunyuanWorld-Voyager Introduction**
-
 ###  Architecture
 
 Voyager consists of two key components:
@@ -70,10 +67,10 @@ Voyager consists of two key components:
 (2) Long-Range World Exploration: An efficient world cache with point culling and an auto-regressive inference with smooth video sampling for iterative scene extension with context-aware consistency.
 
 To train Voyager, we propose a scalable data engine, i.e., a video reconstruction pipeline that automates camera pose estimation and metric depth prediction for arbitrary videos, enabling large-scale, diverse training data curation without manual 3D annotations. Using this pipeline, we compile a dataset of over 100,000 video clips, combining real-world captures and synthetic Unreal Engine renders.
-<p align="center">
-  <img src="./assets/backbone.jpg"  height=500>
-</p>
 
+<p align="center">
+  <img src="assets/backbone.jpg"  height=500>
+</p>
 
 ### Performance
 
@@ -94,22 +91,22 @@ To train Voyager, we propose a scalable data engine, i.e., a video reconstructio
   <tbody>
     <tr>
       <td>WonderJourney</td>
-      <td><u>63.75</u></td>
-      <td><u>84.6</u></td>
+      <td>🟡63.75</td>
+      <td>🟡84.6</td>
       <td>37.1</td>
       <td>35.54</td>
       <td>80.6</td>
       <td>79.03</td>
       <td>62.82</td>
-      <td><b>66.56</b></td>
+      <td>🟢66.56</td>
     </tr>
     <tr>
       <td>WonderWorld</td>
-      <td><b>72.69</b></td>
-      <td><b><u>92.98</u></b></td>
+      <td>🟢72.69</td>
+      <td>🔴92.98</td>
       <td>51.76</td>
-      <td><b><u>71.25</u></b></td>
-      <td><b><u>86.87</u></b></td>
+      <td>🔴71.25</td>
+      <td>🔴86.87</td>
       <td>85.56</td>
       <td>70.57</td>
       <td>49.81</td>
@@ -122,15 +119,15 @@ To train Voyager, we propose a scalable data engine, i.e., a video reconstructio
       <td>50.76</td>
       <td>67.29</td>
       <td>47.35</td>
-      <td><u>73.05</u></td>
+      <td>🟡73.05</td>
       <td>50.31</td>
     </tr>
     <tr>
       <td>Allegro</td>
       <td>55.31</td>
       <td>24.84</td>
-      <td><u>57.47</u></td>
-      <td><u>51.48</u></td>
+      <td>🟡57.47</td>
+      <td>🟡51.48</td>
       <td>70.5</td>
       <td>69.89</td>
       <td>65.6</td>
@@ -140,12 +137,12 @@ To train Voyager, we propose a scalable data engine, i.e., a video reconstructio
       <td>Gen-3</td>
       <td>60.71</td>
       <td>29.47</td>
-      <td><b>62.92</b></td>
+      <td>🟢62.92</td>
       <td>50.49</td>
       <td>68.31</td>
-      <td><b>87.09</b></td>
+      <td>🟢87.09</td>
       <td>62.82</td>
-      <td><u>63.85</u></td>
+      <td>🟡63.85</td>
     </tr>
     <tr>
       <td>CogVideoX-I2V</td>
@@ -153,26 +150,25 @@ To train Voyager, we propose a scalable data engine, i.e., a video reconstructio
       <td>38.27</td>
       <td>40.07</td>
       <td>36.73</td>
-      <td><b>86.21</b></td>
-      <td><b><u>88.12</u></b></td>
-      <td><b>83.22</b></td>
+      <td>🟢86.21</td>
+      <td>🔴88.12</td>
+      <td>🟢83.22</td>
       <td>62.44</td>
     </tr>
     <tr class="voyager-row">
       <td><b>Voyager</b></td>
-      <td><b><u>77.62</u></b></td>
-      <td><b>85.95</b></td>
-      <td><b><u>66.92</u></b></td>
-      <td><b>68.92</b></td>
-      <td><u>81.56</u></td>
-      <td><u>85.99</u></td>
-      <td><b><u>84.89</u></b></td>
-      <td><b><u>71.09</u></b></td>
+      <td>🔴77.62</td>
+      <td>🟢85.95</td>
+      <td>🔴66.92</td>
+      <td>🟢68.92</td>
+      <td>🟡81.56</td>
+      <td>🟡85.99</td>
+      <td>🔴84.89</td>
+      <td>🔴71.09</td>
     </tr>
   </tbody>
-  <caption>Quantitative comparison on <i>WorldScore Benchmark</i>. <b><u>Bold and underline</u></b> indicates the 1st, <b>Bold</b> indicates the 2nd, <u>underline</u> indicates the 3rd.</caption>
+  <caption>Quantitative comparison on <i>WorldScore Benchmark</i>. 🔴 indicates the 1st, 🟢 indicates the 2nd, 🟡 indicates the 3rd.</caption>
 </table>
-
 
 
 ## 📜 Requirements
@@ -183,12 +179,12 @@ The following table shows the requirements for running Voyager (batch size = 1) 
 |:----------------:|:-----------:|:----------------:|
 | HunyuanWorld-Voyager |    540p     |       60GB        |
 
-
 * An NVIDIA GPU with CUDA support is required. 
   * The model is tested on a single 80G GPU.
   * **Minimum**: The minimum GPU memory required is 60GB for 540p.
   * **Recommended**: We recommend using a GPU with 80GB of memory for better generation quality.
 * Tested operating system: Linux
+
 
 ## 🛠️ Dependencies and Installation
 
@@ -232,19 +228,20 @@ pip install nvidia-cublas-cu12==12.4.5.8
 export LD_LIBRARY_PATH=/opt/conda/lib/python3.8/site-packages/nvidia/cublas/lib/
 ```
 
+
 ## 🧱 Download Pretrained Models
 
 The details of download pretrained models are shown [here](ckpts/README.md).
 
 
-
 ## 🔑 Inference
-
 ### Create Input Condition
+
+We provide several input examples in the `examples` folder. You can find the corresponding input text in the `prompt.txt` file. If you'd like to use your own input image, you can run the following command:
 ```bash
 cd data_engine
 
-python3 create_input.py --image_path "your_input_image" --render_output_dir "demo/example/" --type "forward"
+python3 create_input.py --image_path "your_input_image" --render_output_dir "examples/case/" --type "forward"
 ```
 We provide the following types of camera path:
 - forward
@@ -256,13 +253,14 @@ We provide the following types of camera path:
 You can also modify the camera path in the `create_input.py` file.
 
 ### Single-GPU Inference
+
 ```bash
 cd HunyuanWorld-Voyager
 
 python3 sample_image2video.py \
     --model HYVideo-T/2 \
-    --input-path "demo/example" \
-    --prompt "Waterfall at Sunset, waterfall, grassy landscape." \
+    --input-path "examples/case1" \
+    --prompt "An old-fashioned European village with thatched roofs on the houses." \
     --i2v-stability \
     --infer-steps 50 \
     --flow-reverse \
@@ -287,8 +285,8 @@ cd HunyuanWorld-Voyager
 ALLOW_RESIZE_FOR_SP=1 torchrun --nproc_per_node=8 \
     sample_image2video.py \
     --model HYVideo-T/2 \
-    --input-path "demo/example" \
-    --prompt "Waterfall at Sunset, waterfall, grassy landscape." \
+    --input-path "examples/case1" \
+    --prompt "An old-fashioned European village with thatched roofs on the houses." \
     --i2v-stability \
     --infer-steps 50 \
     --flow-reverse \
@@ -301,7 +299,6 @@ ALLOW_RESIZE_FOR_SP=1 torchrun --nproc_per_node=8 \
 ```
 
 The number of GPUs equals the product of `--ulysses-degree` and `--ring-degree.` Feel free to adjust these parallel configurations to optimize performance.
-
 
 <p align="center">
 <table align="center">
@@ -331,11 +328,12 @@ The number of GPUs equals the product of `--ulysses-degree` and `--ring-degree.`
 
 ## ⚙️ Data Engine
 
-We also release the data engine of HunyuanWorld-Voyager, which can be used to generate scalable data for RGB-D video training. Please refer to [data_engine](./data_engine/README.md) for more details.
+We also release the data engine of HunyuanWorld-Voyager, which can be used to generate scalable data for RGB-D video training. Please refer to [data_engine](data_engine/README.md) for more details.
 
 <p align="center">
-  <img src="./assets/data_engine.jpg"  height=500>
+  <img src="assets/data_engine.jpg"  height=500>
 </p>
+
 
 ## 🔗 BibTeX
 
@@ -351,8 +349,6 @@ If you find [Voyager](https://arxiv.org/abs/2506.04225) useful for your research
 ```
 
 
-
 ## Acknowledgements
 
 We would like to thank [HunyuanVideo-I2V](https://github.com/Tencent-Hunyuan/HunyuanVideo-I2V) and [HunyuanWorld](https://github.com/Tencent-Hunyuan/HunyuanWorld-1.0). We also thank [VGGT](https://github.com/facebookresearch/vggt), [MoGE](https://github.com/microsoft/MoGe), [Metric3D](https://github.com/YvanYin/Metric3D), for their open research and exploration.
-
