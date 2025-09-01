@@ -31,7 +31,7 @@ def camera_list(
     assert type in ["forward", "backward", "left", "right", "turn_left", "turn_right"], "Invalid camera type"
 
     start_pos = np.array([0, 0, 0])
-    end_post = np.array([0, 0, 0])
+    end_pos = np.array([0, 0, 0])
     if type == "forward":
         end_pos = np.array([0, 0, 1])
     elif type == "backward":
