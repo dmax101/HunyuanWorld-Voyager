@@ -8,7 +8,7 @@
 
 <div align="center">
   <a href="https://3d-models.hunyuan.tencent.com/world/" target="_blank"><img src="https://img.shields.io/static/v1?label=Project%20Page&message=Web&color=green" height=22px></a>
-  <a href="https://arxiv.org/abs/2506.04225" target="_blank"><img src="https://img.shields.io/static/v1?label=Tech%20Report&message=arxiv&color=red" height=22px></a>
+  <a href="assets/HYWorld_Voyager.pdf" target="_blank"><img src="https://img.shields.io/static/v1?label=Tech%20Report&message=arxiv&color=red" height=22px></a>
   <a href="https://huggingface.co/tencent/HunyuanWorld-Voyager" target="_blank"><img src="https://img.shields.io/static/v1?label=HunyuanWorld-Voyager&message=HuggingFace&color=yellow" height=22px></a>
 </div>
 
