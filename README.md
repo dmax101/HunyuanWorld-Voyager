@@ -233,6 +233,13 @@ pip install nvidia-cublas-cu12==12.4.5.8
 export LD_LIBRARY_PATH=/opt/conda/lib/python3.8/site-packages/nvidia/cublas/lib/
 ```
 
+To create your own input conditions, you also need to install the following dependencies:
+```shell
+pip install --no-deps git+https://github.com/microsoft/MoGe.git
+pip install scipy==1.11.4
+pip install git+https://github.com/EasternJournalist/utils3d.git@c5daf6f6c244d251f252102d09e9b7bcef791a38
+```
+
 
 ## 🧱 Download Pretrained Models
 
@@ -330,6 +337,14 @@ The number of GPUs equals the product of `--ulysses-degree` and `--ring-degree.`
 </table>
 </p>
 
+### Gradio Demo
+
+We also provide a Gradio demo for the HunyuanWorld-Voyager model. You can run the following command to start the demo:
+```bash
+cd HunyuanWorld-Voyager
+
+python3 app.py
+```
 
 ## ⚙️ Data Engine
 
