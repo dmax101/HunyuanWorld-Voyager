@@ -360,7 +360,7 @@ if __name__ == "__main__":
     device = torch.device("cuda")
     model = MoGeModel.from_pretrained("Ruicheng/moge-vitl", local_files_only=False).to(device)
 
-    image = np.array(Image.open(args.image_path).resize((1280, 720)))
+    image = np.array(Image.open(args.image_path).convert("RGB").resize((1280, 720)))
     image_tensor = torch.tensor(image / 255, dtype=torch.float32, device=device).permute(2, 0, 1)    
     output = model.infer(image_tensor)
     depth = np.array(output['depth'].detach().cpu())
