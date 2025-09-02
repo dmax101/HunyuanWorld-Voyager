@@ -14,7 +14,7 @@
 
 -----
 
-We introduce HunyuanWorld-Voyager, a novel video diffusion framework that generates world-consistent 3D point-cloud sequences from a single image with user-defined camera path. Voyager can generate 3D-consistent scene videos for world exploration following custom camera trajectories. It can also jointly generate aligned depth and RGB video for effective and direct 3D reconstruction.
+We introduce HunyuanWorld-Voyager, a novel video diffusion framework that generates world-consistent 3D point-cloud sequences from a single image with user-defined camera path. Voyager can generate 3D-consistent scene videos for world exploration following custom camera trajectories. It can also generate aligned depth and RGB video for efficient and direct 3D reconstruction.
 
 
 ## 🔥🔥🔥 News!!
