@@ -235,6 +235,13 @@ pip install nvidia-cublas-cu12==12.4.5.8
 export LD_LIBRARY_PATH=/opt/conda/lib/python3.8/site-packages/nvidia/cublas/lib/
 ```
 
+为了创建自己的输入条件，您还需要安装以下依赖：
+```shell
+pip install --no-deps git+https://github.com/microsoft/MoGe.git
+pip install scipy==1.11.4
+pip install git+https://github.com/EasternJournalist/utils3d.git@c5daf6f6c244d251f252102d09e9b7bcef791a38
+```
+
 
 ## 🧱 下载预训练模型
 
@@ -331,6 +338,16 @@ GPU数量等于`--ulysses-degree`和`--ring-degree`的乘积。您可以自由�
 </tbody>
 </table>
 </p>
+
+
+### Gradio 演示
+
+我们也提供了一个Gradio演示，您可以使用以下命令启动：
+```bash
+cd HunyuanWorld-Voyager
+
+python3 app.py
+```
 
 
 ## ⚙️ 数据引擎
