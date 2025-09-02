@@ -18,7 +18,7 @@ We introduce HunyuanWorld-Voyager, a novel video diffusion framework that genera
 
 
 ## 🔥🔥🔥 News!!
-* Sep 2, 2025: 👋 We release the inference code and model weights of HunyuanWorld-Voyager. [Download](ckpts/README.md).
+* Sep 2, 2025: 👋 We release the code and model weights of HunyuanWorld-Voyager. [Download](ckpts/README.md).
 
 > Join our **[Wechat](#)** and **[Discord](https://discord.gg/dNBrdrGGMa)** group to discuss and find help from us.
 
