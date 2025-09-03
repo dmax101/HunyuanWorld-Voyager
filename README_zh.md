@@ -342,13 +342,20 @@ GPU数量等于`--ulysses-degree`和`--ring-degree`的乘积。您可以自由�
 
 ### Gradio 演示
 
-我们也提供了一个Gradio演示，您可以使用以下命令启动：
+我们也提供了一个Gradio演示，
+
+<p align="center">
+  <img src="assets/gradio.png"  height=500>
+</p>
+
+您可以使用以下命令启动：
 ```bash
 cd HunyuanWorld-Voyager
 
 python3 app.py
 ```
 
+您需要首先上传一张图片并选择相机的运动方向，来生成一个条件视频。接下来，您就可以输入文本提示词来生成最终的RGB-D视频。
 
 ## ⚙️ 数据引擎
 

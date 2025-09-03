@@ -339,12 +339,19 @@ The number of GPUs equals the product of `--ulysses-degree` and `--ring-degree.`
 
 ### Gradio Demo
 
-We also provide a Gradio demo for the HunyuanWorld-Voyager model. You can run the following command to start the demo:
+We also provide a Gradio demo for the HunyuanWorld-Voyager model. 
+
+<p align="center">
+  <img src="assets/gradio.png"  height=500>
+</p>
+
+You can run the following command to start the demo:
 ```bash
 cd HunyuanWorld-Voyager
 
 python3 app.py
 ```
+You need to first upload an image and choose a camera direction to create a condition video. Then, you can type your text prompt and generate the final RGB-D video.
 
 ## ⚙️ Data Engine
 
