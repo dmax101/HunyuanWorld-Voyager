@@ -243,7 +243,10 @@ pip install git+https://github.com/EasternJournalist/utils3d.git@c5daf6f6c244d25
 
 ## 🧱 Download Pretrained Models
 
-The details of download pretrained models are shown [here](ckpts/README.md).
+A detailed guidance for downloading pretrained models is shown [here](ckpts/README.md). Briefly,
+```
+huggingface-cli download tencent/HunyuanWorld-Voyager --local-dir ./ckpts
+```
 
 
 ## 🔑 Inference
