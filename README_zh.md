@@ -245,8 +245,10 @@ pip install git+https://github.com/EasternJournalist/utils3d.git@c5daf6f6c244d25
 
 ## 🧱 下载预训练模型
 
-下载预训练模型的详细信息请参考[这里](ckpts/README.md)。
-
+下载预训练模型的详细信息请参考[这里](ckpts/README.md)。简单来讲，
+```
+huggingface-cli download tencent/HunyuanWorld-Voyager --local-dir ./ckpts
+```
 
 ## 🔑 推理
 
