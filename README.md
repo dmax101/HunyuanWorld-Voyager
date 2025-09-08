@@ -378,7 +378,9 @@ If you find [Voyager](https://arxiv.org/abs/2506.04225) useful for your research
 }
 ```
 
+## 📧 Contact
+Please send emails to tengfeiwang12@gmail.com if there is any question
 
 ## Acknowledgements
 
-We would like to thank [HunyuanWorld](https://github.com/Tencent-Hunyuan/HunyuanWorld-1.0), [Hunyuan3D-2](https://github.com/Tencent-Hunyuan/Hunyuan3D-2), and [HunyuanVideo-I2V](https://github.com/Tencent-Hunyuan/HunyuanVideo-I2V). We also thank [VGGT](https://github.com/facebookresearch/vggt), [MoGE](https://github.com/microsoft/MoGe), [Metric3D](https://github.com/YvanYin/Metric3D), for their open research and exploration.
+We would like to thank [HunyuanWorld](https://github.com/Tencent-Hunyuan/HunyuanWorld-1.0), [Hunyuan3D](https://github.com/Tencent-Hunyuan/Hunyuan3D-2), and [HunyuanVideo](https://github.com/Tencent-Hunyuan/HunyuanVideo-I2V). We also thank [VGGT](https://github.com/facebookresearch/vggt), [MoGE](https://github.com/microsoft/MoGe), [Metric3D](https://github.com/YvanYin/Metric3D), for their open research and exploration.
