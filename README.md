@@ -356,6 +356,14 @@ python3 app.py
 ```
 You need to first upload an image and choose a camera direction to create a condition video. Then, you can type your text prompt and generate the final RGB-D video.
 
+### Export Point Cloud
+After generating RGB-D video content, you can export `ply` file as follows:
+```bash
+cd data_engine
+
+python3 convert_point.py --folder_path "your_input_condition_folder" --video_path "your_output_video_path"
+```
+
 ## ⚙️ Data Engine
 
 We also release the data engine of HunyuanWorld-Voyager, which can be used to generate scalable data for RGB-D video training. Please refer to [data_engine](data_engine/README.md) for more details.
