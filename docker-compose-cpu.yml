@@ -11,7 +11,7 @@ services:
       - |
         set -e
         echo "🚀 HunyuanWorld-Voyager CPU - Starting..."
-        echo "⚠️  WARNING: Running in CPU-only mode (limited functionality)"
+        echo "⚠️ WARNING: Running in CPU-only mode (limited functionality)"
         
         export DEBIAN_FRONTEND=noninteractive
         
@@ -43,82 +43,44 @@ services:
         pip install gradio transformers pillow numpy opencv-python \
                    imageio scipy loguru tqdm pandas accelerate
         
-        # Create simplified CPU demo using Python directly
-        python3 -c "
-import os
-with open('/app/app_cpu.py', 'w') as f:
-    f.write('''import gradio as gr
-import numpy as np
-from PIL import Image
-import time
-import os
-
-os.environ[\"CUDA_VISIBLE_DEVICES\"] = \"\"
-
-def process_demo(image, direction, prompt):
-    if image is None:
-        return None, \"❌ Please upload an image first\"
-    
-    time.sleep(2)
-    
-    result = f\"\"\"✅ Interface working!
-
-📷 Image: Received ({image.size if hasattr(image, \"size\") else \"Unknown\"})
-🧭 Direction: {direction}
-📝 Prompt: {prompt}
-
-⚠️ CPU VERSION - Limited functionality
-🎯 For complete generation, use NVIDIA GPU 60GB+
-
-This is a test interface to verify your Docker setup works.
-For full video generation capabilities, you need the GPU version.
-\"\"\"
-    
-    return image, result
-
-with gr.Blocks(title=\"Voyager CPU Test\") as demo:
-    gr.Markdown(\"# ☯️ HunyuanWorld-Voyager (CPU Test Mode)\")
-    gr.Markdown(\"⚠️ **Limited functionality** - Interface testing only\")
-    
-    with gr.Row():
-        with gr.Column():
-            image = gr.Image(label=\"Upload Image\", type=\"pil\")
-            direction = gr.Dropdown(
-                [\"forward\", \"backward\", \"left\", \"right\", \"turn_left\", \"turn_right\"],
-                label=\"Camera Direction\", value=\"forward\"
-            )
-            prompt = gr.Textbox(label=\"Text Prompt\", lines=3, 
-                               placeholder=\"Describe the scene...\")
-            btn = gr.Button(\"🔍 Test Interface\", variant=\"primary\")
+        # Create simple demo app
+        echo "🎯 Creating test interface..."
+        cat > /app/app_cpu.py << 'APPEOF'
+        import gradio as gr
+        import time
+        import os
         
-        with gr.Column():
-            out_img = gr.Image(label=\"Result\")
-            out_txt = gr.Textbox(label=\"Status\", lines=12)
-    
-    btn.click(process_demo, [image, direction, prompt], [out_img, out_txt])
-    
-    gr.Markdown(\"\"\"
-    ## 💡 About this CPU version:
-    - ✅ Interface fully functional
-    - ✅ Upload and validation working
-    - ❌ No video generation (requires GPU)
-    - ❌ No AI processing (requires CUDA)
-    
-    **Next step**: If this works, your infrastructure is ready for the full GPU version!
-    \"\"\")
-
-demo.launch(server_name=\"0.0.0.0\", server_port=8080, share=False)
-''')
-"
+        os.environ["CUDA_VISIBLE_DEVICES"] = ""
+        
+        def test_func(image, direction, prompt):
+            if image is None:
+                return None, "❌ Please upload an image first"
+            time.sleep(2)
+            result = f"✅ Test completed!\n📷 Image: {image.size}\n🧭 Direction: {direction}\n📝 Prompt: {prompt}\n\n⚠️ CPU Mode - Limited functionality\n🎯 For full features, use GPU version"
+            return image, result
+        
+        with gr.Blocks(title="Voyager CPU Test") as demo:
+            gr.Markdown("# ☯️ HunyuanWorld-Voyager (CPU Test)")
+            with gr.Row():
+                with gr.Column():
+                    img = gr.Image(label="Upload", type="pil")
+                    direction = gr.Dropdown(["forward", "backward", "left", "right"], value="forward")
+                    prompt = gr.Textbox(label="Prompt", lines=3)
+                    btn = gr.Button("🔍 Test", variant="primary")
+                with gr.Column():
+                    out_img = gr.Image(label="Result")
+                    out_txt = gr.Textbox(label="Status", lines=8)
+            btn.click(test_func, [img, direction, prompt], [out_img, out_txt])
+            gr.Markdown("💡 CPU version for testing interface only")
+        
+        demo.launch(server_name="0.0.0.0", server_port=8080, share=False)
+        APPEOF
         
         echo ""
-        echo "🌟 =================================="
-        echo "🌟  VOYAGER CPU DEMO READY!"
-        echo "🌟 =================================="
+        echo "🌟 VOYAGER CPU DEMO READY!"
         echo "🌐 Interface: http://localhost:3500"
-        echo "🖥️  Mode: CPU-only (interface testing)"
-        echo "📖 Docs: https://github.com/dmax101/HunyuanWorld-Voyager"
-        echo "⚠️  Limited: No video generation"
+        echo "🖥️ Mode: CPU-only (interface testing)"
+        echo "⚠️ Limited: No video generation"
         echo ""
         
         # Start CPU demo
@@ -134,20 +96,13 @@ demo.launch(server_name=\"0.0.0.0\", server_port=8080, share=False)
       - voyager_cpu_cache:/root/.cache
     
     environment:
-      # Force CPU
       - CUDA_VISIBLE_DEVICES=""
       - TORCH_DEVICE=cpu
-      
-      # Python
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
-      
-      # Interface
       - GRADIO_SERVER_NAME=0.0.0.0
       - GRADIO_SERVER_PORT=8080
       - GRADIO_ANALYTICS_ENABLED=false
-      
-      # CPU Performance
       - OMP_NUM_THREADS=2
       - MKL_NUM_THREADS=2
     
