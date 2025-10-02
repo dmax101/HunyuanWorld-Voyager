@@ -15,6 +15,9 @@ services:
         
         export DEBIAN_FRONTEND=noninteractive
         
+        # Ensure clean app directory
+        mkdir -p /app
+        
         # Install basic dependencies
         apt-get update && apt-get install -y \
             python3.11 python3.11-dev python3-pip git curl \
@@ -25,10 +28,17 @@ services:
         update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
         python3 -m pip install --upgrade pip
         
-        # Clone repository if needed
+        # Setup repository
         if [ ! -d "/app/.git" ]; then
-            echo "📦 Cloning repository..."
-            git clone https://github.com/dmax101/HunyuanWorld-Voyager.git /app
+            echo "📦 Setting up repository..."
+            rm -rf /app/* /app/.[^.]* 2>/dev/null || true
+            git clone https://github.com/dmax101/HunyuanWorld-Voyager.git /tmp/repo
+            mv /tmp/repo/* /app/ 2>/dev/null || true
+            mv /tmp/repo/.[^.]* /app/ 2>/dev/null || true
+            rm -rf /tmp/repo
+        else
+            echo "📦 Repository already exists, updating..."
+            cd /app && git pull origin main 2>/dev/null || echo "⚠️ Could not update repository"
         fi
         
         cd /app
@@ -40,8 +50,11 @@ services:
         
         # Install basic dependencies for interface
         echo "📚 Installing interface dependencies..."
-        pip install gradio transformers pillow numpy opencv-python \
-                   imageio scipy loguru tqdm pandas accelerate
+        pip install --no-cache-dir gradio transformers pillow numpy opencv-python \
+                   imageio scipy loguru tqdm pandas accelerate || {
+            echo "⚠️ Some packages failed to install, continuing with basic setup..."
+            pip install --no-cache-dir gradio pillow numpy || exit 1
+        }
         
         # Create simple demo app
         echo "🎯 Creating test interface..."
