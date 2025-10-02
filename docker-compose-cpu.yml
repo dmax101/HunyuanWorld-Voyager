@@ -1,0 +1,301 @@
+version: '3.8'
+
+# 🖥️ HunyuanWorld-Voyager - CPU-Only Version
+# For NAS without CUDA/GPU NVIDIA support
+
+services:
+  hunyuanworld-voyager-cpu:
+    image: ubuntu:22.04
+    container_name: hunyuanworld-voyager-cpu
+    restart: unless-stopped
+    
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        set -e
+        echo "🚀 HunyuanWorld-Voyager CPU - Starting..."
+        echo "⚠️  WARNING: Running in CPU-only mode (limited functionality)"
+        
+        export DEBIAN_FRONTEND=noninteractive
+        
+        # Install basic dependencies
+        apt-get update && apt-get install -y \
+            python3.11 python3.11-dev python3-pip git curl \
+            libgl1-mesa-glx libglib2.0-0 build-essential \
+            && rm -rf /var/lib/apt/lists/*
+        
+        # Configure Python
+        update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+        python3 -m pip install --upgrade pip
+        
+        # Clone repository if needed
+        if [ ! -d "/app/.git" ]; then
+            echo "📦 Cloning repository..."
+            git clone https://github.com/dmax101/HunyuanWorld-Voyager.git /app
+        fi
+        
+        cd /app
+        
+        # Install PyTorch CPU-only
+        echo "🔧 Installing PyTorch CPU-only..."
+        pip install torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0 \
+            --index-url https://download.pytorch.org/whl/cpu
+        
+        # Install basic dependencies for interface
+        echo "📚 Installing interface dependencies..."
+        pip install gradio transformers pillow numpy opencv-python \
+                   imageio scipy loguru tqdm pandas accelerate
+        
+        # Create simplified CPU demo
+        cat > /app/app_cpu.py << 'EOF'
+import gradio as gr
+import numpy as np
+from PIL import Image
+import time
+import os
+import torch
+
+# Force CPU usage
+os.environ['CUDA_VISIBLE_DEVICES'] = ''
+torch.set_default_device('cpu')
+
+def process_image_demo(image, direction, prompt):
+    """Simplified demo that simulates processing"""
+    if image is None:
+        return None, "❌ Please upload an image first"
+    
+    try:
+        # Simulate processing time
+        time.sleep(2)
+        
+        # Image information
+        img_info = f"Dimensions: {image.size}" if hasattr(image, 'size') else "Image loaded"
+        
+        result_text = f"""
+✅ INTERFACE TEST COMPLETED!
+
+📷 Image: {img_info}
+🧭 Camera direction: {direction}
+📝 Prompt: "{prompt}"
+
+🎯 STATUS: Interface working correctly!
+
+⚠️  CPU MODE - LIMITATIONS:
+❌ Video generation (requires GPU NVIDIA 60GB+)
+❌ Diffusion model processing
+❌ Depth map inference
+❌ Point cloud generation
+
+✅ AVAILABLE FEATURES:
+✓ Responsive web interface
+✓ Image upload and visualization
+✓ Input validation
+✓ Navigation and controls
+
+💡 NEXT STEPS:
+1. If this interface works, your infrastructure is OK
+2. For full functionality, you will need:
+   - NVIDIA GPU with 60GB+ VRAM
+   - NVIDIA Container Toolkit
+   - Full version docker-compose
+
+🔗 To migrate to GPU: Use docker-compose-dockge.yml
+        """
+        
+        return image, result_text
+        
+    except Exception as e:
+        return None, f"❌ Processing error: {str(e)}"
+
+def create_cpu_demo():
+    with gr.Blocks(
+        title="Voyager CPU Demo", 
+        theme=gr.themes.Soft(),
+        css="""
+        .main-header { text-align: center; margin: 20px 0; }
+        .warning-box { background: #fff3cd; border: 1px solid #ffeaa7; 
+                      border-radius: 8px; padding: 15px; margin: 10px 0; }
+        """
+    ) as demo:
+        
+        gr.HTML("""
+        <div class="main-header">
+            <h1>☯️ HunyuanWorld-Voyager</h1>
+            <h2>🖥️ CPU Version for Testing</h2>
+        </div>
+        """)
+        
+        gr.HTML("""
+        <div class="warning-box">
+            <strong>⚠️ CPU MODE ACTIVE</strong><br>
+            This is a limited version for interface testing.<br>
+            For video generation, use NVIDIA GPU with 60GB+ VRAM.
+        </div>
+        """)
+        
+        with gr.Row():
+            with gr.Column(scale=1):
+                gr.Markdown("### 📤 Upload and Configuration")
+                
+                input_image = gr.Image(
+                    label="📷 Image Upload",
+                    type="pil",
+                    height=300
+                )
+                
+                direction_choice = gr.Dropdown(
+                    choices=[
+                        "forward", "backward", "left", "right", 
+                        "turn_left", "turn_right"
+                    ],
+                    label="🧭 Camera Direction",
+                    value="forward"
+                )
+                
+                input_prompt = gr.Textbox(
+                    label="📝 Text Prompt",
+                    placeholder="Describe the scene you would like to generate...",
+                    lines=3
+                )
+                
+                test_btn = gr.Button(
+                    "🔍 Test Interface",
+                    variant="primary",
+                    size="lg"
+                )
+            
+            with gr.Column(scale=1):
+                gr.Markdown("### 📊 Test Results")
+                
+                output_image = gr.Image(
+                    label="🖼️ Processed Image",
+                    height=300
+                )
+                
+                output_text = gr.Textbox(
+                    label="📋 Processing Log",
+                    lines=15,
+                    max_lines=25
+                )
+        
+        # Event handler
+        test_btn.click(
+            fn=process_image_demo,
+            inputs=[input_image, direction_choice, input_prompt],
+            outputs=[output_image, output_text]
+        )
+        
+        # Additional information
+        with gr.Accordion("📖 Information and Limitations", open=False):
+            gr.Markdown("""
+            ## 🎯 Purpose of this CPU Version
+            
+            This version serves to:
+            - ✅ **Test** if your Docker infrastructure works
+            - ✅ **Validate** network and port configuration
+            - ✅ **Demonstrate** the interface before investing in GPU
+            - ✅ **Check** compatibility with your NAS
+            
+            ## ⚠️ What doesn't work in CPU mode
+            
+            - ❌ **Video generation** (models too heavy)
+            - ❌ **AI processing** (requires CUDA)
+            - ❌ **Diffusion models** (60GB+ VRAM needed)
+            - ❌ **Depth estimation** (computationally intensive)
+            
+            ## 🚀 For Full Functionality
+            
+            You will need:
+            1. **NVIDIA GPU** with at least 60GB VRAM (RTX A6000, A100, H100)
+            2. **NVIDIA Container Toolkit** installed on TrueNAS
+            3. **docker-compose-dockge.yml** (GPU version)
+            4. **Model download** (~100GB)
+            
+            ## 💰 Cost vs Benefit
+            
+            - **This CPU version**: Free, limited, for testing
+            - **Full GPU version**: Expensive (hardware $5k+), functional
+            - **Cloud GPU**: Alternative with pay-per-use
+            """)
+    
+    return demo
+
+if __name__ == "__main__":
+    print("🚀 Starting HunyuanWorld-Voyager in CPU mode...")
+    print("⚠️  WARNING: Limited functionality - interface testing only")
+    print("🌐 Access at: http://localhost:8080")
+    print("📖 For full version: NVIDIA GPU 60GB+ required")
+    
+    demo = create_cpu_demo()
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=8080,
+        share=False,
+        debug=False,
+        show_error=True
+    )
+EOF
+        
+        echo ""
+        echo "🌟 =================================="
+        echo "🌟  VOYAGER CPU DEMO READY!"
+        echo "🌟 =================================="
+        echo "🌐 Interface: http://localhost:3500"
+        echo "🖥️  Mode: CPU-only (interface testing)"
+        echo "📖 Docs: https://github.com/dmax101/HunyuanWorld-Voyager"
+        echo "⚠️  Limited: No video generation"
+        echo ""
+        
+        # Start CPU demo
+        echo "🚀 Starting test interface..."
+        python3 /app/app_cpu.py
+    
+    ports:
+      - "3500:8080"
+    
+    volumes:
+      - voyager_cpu_app:/app
+      - voyager_cpu_temp:/app/temp
+      - voyager_cpu_cache:/root/.cache
+    
+    environment:
+      # Force CPU
+      - CUDA_VISIBLE_DEVICES=""
+      - TORCH_DEVICE=cpu
+      
+      # Python
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+      
+      # Interface
+      - GRADIO_SERVER_NAME=0.0.0.0
+      - GRADIO_SERVER_PORT=8080
+      - GRADIO_ANALYTICS_ENABLED=false
+      
+      # CPU Performance
+      - OMP_NUM_THREADS=2
+      - MKL_NUM_THREADS=2
+    
+    shm_size: 1gb
+    
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 180s
+    
+    networks:
+      - voyager_cpu_net
+
+volumes:
+  voyager_cpu_app:
+    driver: local
+  voyager_cpu_temp:
+    driver: local
+  voyager_cpu_cache:
+    driver: local
+
+networks:
+  voyager_cpu_net:
+    driver: bridge

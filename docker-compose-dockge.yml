@@ -1,0 +1,213 @@
+version: '3.8'
+
+services:
+  hunyuanworld-voyager:
+    image: nvidia/cuda:12.4-devel-ubuntu22.04
+    container_name: hunyuanworld-voyager
+    restart: unless-stopped
+    
+    # Complete inline initialization script
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        set -e
+        echo "🚀 HunyuanWorld-Voyager - Starting configuration..."
+        
+        # Configure non-interactive environment
+        export DEBIAN_FRONTEND=noninteractive
+        export PYTHONDONTWRITEBYTECODE=1
+        export PYTHONUNBUFFERED=1
+        
+        # Update system
+        apt-get update && apt-get install -y \
+            python3.11 python3.11-dev python3-pip git wget curl ffmpeg \
+            libgl1-mesa-glx libglib2.0-0 libsm6 libxext6 libxrender-dev libgomp1 \
+            && rm -rf /var/lib/apt/lists/*
+        
+        # Configure Python as default
+        update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+        update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
+        python3 -m pip install --upgrade pip
+        
+        # Check if repository already exists
+        if [ ! -d "/app/.git" ]; then
+            echo "📦 Cloning HunyuanWorld-Voyager..."
+            cd /
+            git clone https://github.com/dmax101/HunyuanWorld-Voyager.git app
+        else
+            echo "📁 Repository already exists, updating..."
+            cd /app && git pull origin main || echo "Failed to update, continuing..."
+        fi
+        
+        cd /app
+        
+        # Install PyTorch with CUDA
+        echo "🔧 Installing PyTorch with CUDA 12.4..."
+        pip install torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0 \
+            --index-url https://download.pytorch.org/whl/cu124
+        
+        # Install basic dependencies
+        echo "📚 Installing project dependencies..."
+        pip install -r requirements.txt
+        
+        # Install additional dependencies
+        echo "🔧 Installing advanced dependencies..."
+        pip install transformers==4.39.3 \
+                   flash-attn \
+                   xfuser==0.4.2 \
+                   nvidia-cublas-cu12==12.4.5.8 \
+                   scipy==1.11.4
+        
+        # Install MoGE and utils3d
+        echo "🎯 Installing MoGE and utils3d..."
+        pip install --no-deps git+https://github.com/microsoft/MoGe.git || echo "MoGe installation failed, continuing..."
+        pip install git+https://github.com/EasternJournalist/utils3d.git@c5daf6f6c244d251f252102d09e9b7bcef791a38 || echo "utils3d installation failed, continuing..."
+        
+        # Create necessary directories
+        mkdir -p /app/{ckpts,examples,results,temp,temp_images}
+        
+        # Configure CUDA variables
+        export CUDA_HOME=/usr/local/cuda
+        export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+        export PATH=/usr/local/cuda/bin:$PATH
+        
+        # Check GPU
+        echo "🎮 GPU Status:"
+        nvidia-smi || echo "⚠️  NVIDIA GPU not detected or drivers not installed"
+        
+        # Check models
+        echo "📋 Checking pre-trained models..."
+        if [ ! -f "/app/ckpts/config.json" ] && [ ! -f "/app/ckpts/model.safetensors" ]; then
+            echo "❌ Models not found!"
+            echo ""
+            echo "📥 HOW TO DOWNLOAD MODELS:"
+            echo "   1. Run: docker exec -it hunyuanworld-voyager bash"
+            echo "   2. In container: cd /app/ckpts"
+            echo "   3. Install HF CLI: pip install huggingface_hub[cli]"
+            echo "   4. Download: huggingface-cli download tencent/HunyuanWorld-Voyager --local-dir ./"
+            echo ""
+            echo "⚠️  IMPORTANT: ~100GB of free space required!"
+            echo ""
+        else
+            echo "✅ Models found!"
+        fi
+        
+        # Final information
+        echo ""
+        echo "🌟 =================================="
+        echo "🌟  HunyuanWorld-Voyager READY!"
+        echo "🌟 =================================="
+        echo "🌐 Web Interface: http://localhost:3500"
+        echo "📖 Documentation: https://github.com/dmax101/HunyuanWorld-Voyager"
+        echo "🐳 Container: hunyuanworld-voyager"
+        echo ""
+        
+        # Start Gradio application
+        echo "🚀 Starting Gradio interface..."
+        python3 app.py
+    
+    # GPU Support (requires NVIDIA Container Toolkit)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    
+    # Ports
+    ports:
+      - "3500:8080"
+    
+    # Volumes for persistence
+    volumes:
+      # Source code (to avoid re-clone/install on each restart)
+      - hunyuanworld_app:/app
+      
+      # Pre-trained models (IMPORTANT: requires manual download)
+      - hunyuanworld_models:/app/ckpts
+      
+      # Results and outputs
+      - hunyuanworld_results:/app/results
+      
+      # Examples
+      - hunyuanworld_examples:/app/examples
+      
+      # Temporary files
+      - hunyuanworld_temp:/app/temp
+      - hunyuanworld_temp_images:/app/temp_images
+      
+      # HuggingFace cache
+      - hunyuanworld_hf_cache:/root/.cache/huggingface
+      
+      # Pip cache (speeds up reinstalls)
+      - hunyuanworld_pip_cache:/root/.cache/pip
+    
+    # Environment variables
+    environment:
+      # NVIDIA/CUDA
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - CUDA_VISIBLE_DEVICES=all
+      
+      # Python
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+      
+      # HuggingFace
+      - HF_HOME=/root/.cache/huggingface
+      - TRANSFORMERS_CACHE=/root/.cache/huggingface/transformers
+      
+      # Model configurations
+      - ALLOW_RESIZE_FOR_SP=1
+      - TORCH_CUDNN_V8_API_ENABLED=1
+      
+      # Web interface
+      - GRADIO_SERVER_NAME=0.0.0.0
+      - GRADIO_SERVER_PORT=8080
+      - GRADIO_ANALYTICS_ENABLED=false
+      
+      # Performance
+      - OMP_NUM_THREADS=1
+      - MKL_NUM_THREADS=1
+      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+    
+    # System resources
+    shm_size: 8gb
+    
+    # Health check
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      interval: 60s
+      timeout: 15s
+      retries: 3
+      start_period: 600s  # 10 minutes for first configuration
+    
+    # Network
+    networks:
+      - voyager_network
+
+# Named volumes for persistence
+volumes:
+  hunyuanworld_app:
+    driver: local
+  hunyuanworld_models:
+    driver: local
+  hunyuanworld_results:
+    driver: local
+  hunyuanworld_examples:
+    driver: local
+  hunyuanworld_temp:
+    driver: local
+  hunyuanworld_temp_images:
+    driver: local
+  hunyuanworld_hf_cache:
+    driver: local
+  hunyuanworld_pip_cache:
+    driver: local
+
+# Network
+networks:
+  voyager_network:
+    driver: bridge
