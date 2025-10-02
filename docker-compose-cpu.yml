@@ -1,8 +1,5 @@
 version: '3.8'
 
-# 🖥️ HunyuanWorld-Voyager - CPU-Only Version
-# For NAS without CUDA/GPU NVIDIA support
-
 services:
   hunyuanworld-voyager-cpu:
     image: ubuntu:22.04
@@ -46,195 +43,73 @@ services:
         pip install gradio transformers pillow numpy opencv-python \
                    imageio scipy loguru tqdm pandas accelerate
         
-        # Create simplified CPU demo
-        cat > /app/app_cpu.py << 'EOF'
-import gradio as gr
+        # Create simplified CPU demo using Python directly
+        python3 -c "
+import os
+with open('/app/app_cpu.py', 'w') as f:
+    f.write('''import gradio as gr
 import numpy as np
 from PIL import Image
 import time
 import os
-import torch
 
-# Force CPU usage
-os.environ['CUDA_VISIBLE_DEVICES'] = ''
-torch.set_default_device('cpu')
+os.environ[\"CUDA_VISIBLE_DEVICES\"] = \"\"
 
-def process_image_demo(image, direction, prompt):
-    """Simplified demo that simulates processing"""
+def process_demo(image, direction, prompt):
     if image is None:
-        return None, "❌ Please upload an image first"
+        return None, \"❌ Please upload an image first\"
     
-    try:
-        # Simulate processing time
-        time.sleep(2)
-        
-        # Image information
-        img_info = f"Dimensions: {image.size}" if hasattr(image, 'size') else "Image loaded"
-        
-        result_text = f"""
-✅ INTERFACE TEST COMPLETED!
-
-📷 Image: {img_info}
-🧭 Camera direction: {direction}
-📝 Prompt: "{prompt}"
-
-🎯 STATUS: Interface working correctly!
-
-⚠️  CPU MODE - LIMITATIONS:
-❌ Video generation (requires GPU NVIDIA 60GB+)
-❌ Diffusion model processing
-❌ Depth map inference
-❌ Point cloud generation
-
-✅ AVAILABLE FEATURES:
-✓ Responsive web interface
-✓ Image upload and visualization
-✓ Input validation
-✓ Navigation and controls
-
-💡 NEXT STEPS:
-1. If this interface works, your infrastructure is OK
-2. For full functionality, you will need:
-   - NVIDIA GPU with 60GB+ VRAM
-   - NVIDIA Container Toolkit
-   - Full version docker-compose
-
-🔗 To migrate to GPU: Use docker-compose-dockge.yml
-        """
-        
-        return image, result_text
-        
-    except Exception as e:
-        return None, f"❌ Processing error: {str(e)}"
-
-def create_cpu_demo():
-    with gr.Blocks(
-        title="Voyager CPU Demo", 
-        theme=gr.themes.Soft(),
-        css="""
-        .main-header { text-align: center; margin: 20px 0; }
-        .warning-box { background: #fff3cd; border: 1px solid #ffeaa7; 
-                      border-radius: 8px; padding: 15px; margin: 10px 0; }
-        """
-    ) as demo:
-        
-        gr.HTML("""
-        <div class="main-header">
-            <h1>☯️ HunyuanWorld-Voyager</h1>
-            <h2>🖥️ CPU Version for Testing</h2>
-        </div>
-        """)
-        
-        gr.HTML("""
-        <div class="warning-box">
-            <strong>⚠️ CPU MODE ACTIVE</strong><br>
-            This is a limited version for interface testing.<br>
-            For video generation, use NVIDIA GPU with 60GB+ VRAM.
-        </div>
-        """)
-        
-        with gr.Row():
-            with gr.Column(scale=1):
-                gr.Markdown("### 📤 Upload and Configuration")
-                
-                input_image = gr.Image(
-                    label="📷 Image Upload",
-                    type="pil",
-                    height=300
-                )
-                
-                direction_choice = gr.Dropdown(
-                    choices=[
-                        "forward", "backward", "left", "right", 
-                        "turn_left", "turn_right"
-                    ],
-                    label="🧭 Camera Direction",
-                    value="forward"
-                )
-                
-                input_prompt = gr.Textbox(
-                    label="📝 Text Prompt",
-                    placeholder="Describe the scene you would like to generate...",
-                    lines=3
-                )
-                
-                test_btn = gr.Button(
-                    "🔍 Test Interface",
-                    variant="primary",
-                    size="lg"
-                )
-            
-            with gr.Column(scale=1):
-                gr.Markdown("### 📊 Test Results")
-                
-                output_image = gr.Image(
-                    label="🖼️ Processed Image",
-                    height=300
-                )
-                
-                output_text = gr.Textbox(
-                    label="📋 Processing Log",
-                    lines=15,
-                    max_lines=25
-                )
-        
-        # Event handler
-        test_btn.click(
-            fn=process_image_demo,
-            inputs=[input_image, direction_choice, input_prompt],
-            outputs=[output_image, output_text]
-        )
-        
-        # Additional information
-        with gr.Accordion("📖 Information and Limitations", open=False):
-            gr.Markdown("""
-            ## 🎯 Purpose of this CPU Version
-            
-            This version serves to:
-            - ✅ **Test** if your Docker infrastructure works
-            - ✅ **Validate** network and port configuration
-            - ✅ **Demonstrate** the interface before investing in GPU
-            - ✅ **Check** compatibility with your NAS
-            
-            ## ⚠️ What doesn't work in CPU mode
-            
-            - ❌ **Video generation** (models too heavy)
-            - ❌ **AI processing** (requires CUDA)
-            - ❌ **Diffusion models** (60GB+ VRAM needed)
-            - ❌ **Depth estimation** (computationally intensive)
-            
-            ## 🚀 For Full Functionality
-            
-            You will need:
-            1. **NVIDIA GPU** with at least 60GB VRAM (RTX A6000, A100, H100)
-            2. **NVIDIA Container Toolkit** installed on TrueNAS
-            3. **docker-compose-dockge.yml** (GPU version)
-            4. **Model download** (~100GB)
-            
-            ## 💰 Cost vs Benefit
-            
-            - **This CPU version**: Free, limited, for testing
-            - **Full GPU version**: Expensive (hardware $5k+), functional
-            - **Cloud GPU**: Alternative with pay-per-use
-            """)
+    time.sleep(2)
     
-    return demo
+    result = f\"\"\"✅ Interface working!
 
-if __name__ == "__main__":
-    print("🚀 Starting HunyuanWorld-Voyager in CPU mode...")
-    print("⚠️  WARNING: Limited functionality - interface testing only")
-    print("🌐 Access at: http://localhost:8080")
-    print("📖 For full version: NVIDIA GPU 60GB+ required")
+📷 Image: Received ({image.size if hasattr(image, \"size\") else \"Unknown\"})
+🧭 Direction: {direction}
+📝 Prompt: {prompt}
+
+⚠️ CPU VERSION - Limited functionality
+🎯 For complete generation, use NVIDIA GPU 60GB+
+
+This is a test interface to verify your Docker setup works.
+For full video generation capabilities, you need the GPU version.
+\"\"\"
     
-    demo = create_cpu_demo()
-    demo.launch(
-        server_name="0.0.0.0",
-        server_port=8080,
-        share=False,
-        debug=False,
-        show_error=True
-    )
-EOF
+    return image, result
+
+with gr.Blocks(title=\"Voyager CPU Test\") as demo:
+    gr.Markdown(\"# ☯️ HunyuanWorld-Voyager (CPU Test Mode)\")
+    gr.Markdown(\"⚠️ **Limited functionality** - Interface testing only\")
+    
+    with gr.Row():
+        with gr.Column():
+            image = gr.Image(label=\"Upload Image\", type=\"pil\")
+            direction = gr.Dropdown(
+                [\"forward\", \"backward\", \"left\", \"right\", \"turn_left\", \"turn_right\"],
+                label=\"Camera Direction\", value=\"forward\"
+            )
+            prompt = gr.Textbox(label=\"Text Prompt\", lines=3, 
+                               placeholder=\"Describe the scene...\")
+            btn = gr.Button(\"🔍 Test Interface\", variant=\"primary\")
+        
+        with gr.Column():
+            out_img = gr.Image(label=\"Result\")
+            out_txt = gr.Textbox(label=\"Status\", lines=12)
+    
+    btn.click(process_demo, [image, direction, prompt], [out_img, out_txt])
+    
+    gr.Markdown(\"\"\"
+    ## 💡 About this CPU version:
+    - ✅ Interface fully functional
+    - ✅ Upload and validation working
+    - ❌ No video generation (requires GPU)
+    - ❌ No AI processing (requires CUDA)
+    
+    **Next step**: If this works, your infrastructure is ready for the full GPU version!
+    \"\"\")
+
+demo.launch(server_name=\"0.0.0.0\", server_port=8080, share=False)
+''')
+"
         
         echo ""
         echo "🌟 =================================="
